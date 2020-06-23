@@ -61,7 +61,6 @@ def alignment(img, y1, y2, x1, x2, out=None):
     degree = np.degrees(np.arctan2(box[0][0] - box[1][0], box[0][1] - box[1][1]))
 
     if out is not None:
-        box = np.int0(np.around(box))
         overlay = img.copy()
         cv2.drawContours(overlay, [box], 0, (0, 255, 0), -1)
         out[...] = cv2.addWeighted(overlay, 0.3, img, 1 - 0.3, 0)

@@ -36,9 +36,10 @@ contour_method = config.getint('CONTOUR DETECTION', 'contour method')
 def alignment(img, y1, y2, x1, x2, out=None):
     img = img[y1:y2, x1:x2]  # Crop image
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # Convert to grayscale
+    # gray = cv2.equalizeHist(gray)  # Histogram Equalization
 
-    ret, thresh = cv2.threshold(gray, 90, 255, 0)  # Threshold image
-    contours, _ = cv2.findContours(thresh, 1, 2)  # Get contours of image
+    ret, thresh = cv2.threshold(gray, thresh_val, max_val, thresh_type)  # Threshold image
+    contours, _ = cv2.findContours(thresh, contour_mode, contour_method)  # Get contours of image
     contours = sort_contours(contours)  # Sort contours from left to write
 
     for i in range(1, len(contours) - 1):  # Fill in all contours except edge ones

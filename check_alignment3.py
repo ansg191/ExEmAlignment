@@ -16,6 +16,9 @@ save_folder = config.get('FILE', 'save folder')
 save_type = config.get('FILE', 'save type')
 put_text = config.getboolean('FILE', 'put text')
 
+right_angle = np.radians(35)
+left_angle = np.raidans(-35)
+
 left_x1 = config.getint('LEFT OBJECT', 'x1')
 left_y1 = config.getint('LEFT OBJECT', 'y1')
 left_x2 = config.getint('LEFT OBJECT', 'x2')
@@ -71,6 +74,35 @@ def alignment(img, y1, y2, x1, x2, out=None):
     return degree
 
 
+def get_3d_rotation(img, out=False):
+    if out:
+        output_left = np.zeros((left_y2 - left_y1, left_x2 - left_x1, 3), np.uint8)
+        output_right = np.zeros((right_y2 - right_y1, right_x2 - right_x1, 3), np.uint8)
+    else:
+        output_left = None
+        output_right = None
+    left = alignment(img, left_y1, left_y2, left_x1, left_x2, output_left)
+    right = alignment(img, right_y1, right_y2, right_x1, right_x2, output_right)
+    if out:
+        try:
+            os.mkdir(os.path.join(save_folder, file_name))
+        except FileExistsError:
+            pass
+
+        if not cv2.imwrite(os.path.join(save_folder, file_name, 'left_' + str(np.around(left, 2)) + '.' +
+                                                                file_type),
+                           output_left):
+            raise IOError("Could not save output")
+        if not cv2.imwrite(os.path.join(save_folder, file_name, 'right_' + str(np.around(right, 2)) + '.' +
+                                                                file_type),
+                           output_right):
+            raise IOError('Could not save output')
+
+    horizontal = right * np.cos(right_angle) + left * np.cos(left_angle)
+    vertical = right * np.sin(right_angle) + left * np.sin(left_angle)
+    return horizontal, vertical
+
+
 def sort_contours(cnts, method='left-to-right'):
     reverse = False
     i = 0
@@ -90,26 +122,12 @@ if folder:
         print("Checking alignment on", f)
         file_name = os.path.splitext(os.path.split(f)[1])[0]
         image = cv2.imread(f)
-        output_left = np.zeros((left_y2 - left_y1, left_x2 - left_x1, 3), np.uint8)
-        output_right = np.zeros((right_y2 - right_y1, right_x2 - right_x1, 3), np.uint8)
-        left = alignment(image, left_y1, left_y2, left_x1, left_x2, output_left)
-        right = alignment(image, right_y1, right_y2, right_x1, right_x2, output_right)
         if save_folder:
-            try:
-                os.mkdir(os.path.join(save_folder, file_name))
-            except FileExistsError:
-                pass
-
-            if not cv2.imwrite(os.path.join(save_folder, file_name, 'left_' + str(np.around(left, 2)) + '.' +
-                                                                    file_type),
-                               output_left):
-                raise IOError("Could not save output")
-            if not cv2.imwrite(os.path.join(save_folder, file_name, 'right_' + str(np.around(right, 2)) + '.' +
-                                                                    file_type),
-                               output_right):
-                raise IOError('Could not save output')
-        print("\tLeft emitter alignment: ", left, "degrees")
-        print("\tRight emitter alignment:", right, "degrees")
+            hor, ver = get_3d_rotation(image, out=True)
+        else:
+            hor, ver = get_3d_rotation(image, out=False)
+        print("\tHorizontal orientation: ", hor, "degrees")
+        print("\tVertical orientation:   ", ver, "degrees")
 else:
     image = cv2.imread(file)
     file_name = os.path.splitext(os.path.split(file)[1])[0]

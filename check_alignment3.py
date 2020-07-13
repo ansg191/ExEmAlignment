@@ -17,7 +17,7 @@ save_type = config.get('FILE', 'save type')
 put_text = config.getboolean('FILE', 'put text')
 
 right_angle = np.radians(35)
-left_angle = np.raidans(-35)
+left_angle = np.radians(-35)
 
 left_x1 = config.getint('LEFT OBJECT', 'x1')
 left_y1 = config.getint('LEFT OBJECT', 'y1')
@@ -89,13 +89,9 @@ def get_3d_rotation(img, out=False):
         except FileExistsError:
             pass
 
-        if not cv2.imwrite(os.path.join(save_folder, file_name, 'left_' + str(np.around(left, 2)) + '.' +
-                                                                file_type),
-                           output_left):
+        if not cv2.imwrite(os.path.join(save_folder, file_name, 'left_' + str(np.around(left, 2)) + '.' + file_type), output_left):
             raise IOError("Could not save output")
-        if not cv2.imwrite(os.path.join(save_folder, file_name, 'right_' + str(np.around(right, 2)) + '.' +
-                                                                file_type),
-                           output_right):
+        if not cv2.imwrite(os.path.join(save_folder, file_name, 'right_' + str(np.around(right, 2)) + '.' + file_type), output_right):
             raise IOError('Could not save output')
 
     horizontal = right * np.cos(right_angle) + left * np.cos(left_angle)
@@ -131,12 +127,9 @@ if folder:
 else:
     image = cv2.imread(file)
     file_name = os.path.splitext(os.path.split(file)[1])[0]
-    output_left = np.zeros((left_y2 - left_y1, left_x2 - left_x1, 3), np.uint8)
-    output_right = np.zeros((right_y2 - right_y1, right_x2 - right_x1, 3), np.uint8)
-    left = alignment(image, left_y1, left_y2, left_x1, left_x2, output_left)
-    right = alignment(image, right_y1, right_y2, right_x1, right_x2, output_right)
     if save_folder:
-        cv2.imwrite(save_folder + '/' + file_name + '/left.' + file_type, output_left)
-        cv2.imwrite(save_folder + '/' + file_name + '/right.' + file_type, output_right)
-    print("Left emitter alignment: ", left, "degrees")
-    print("Right emitter alignment:", right, "degrees")
+        hor, ver = get_3d_rotation(image, out=True)
+    else:
+        hor, ver = get_3d_rotation(image, out=False)
+    print("Horizontal orientation: ", hor, "degrees")
+    print("Vertical orientation:   ", ver, "degrees")

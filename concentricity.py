@@ -204,7 +204,7 @@ def get_circle(a, b, c):
     center = np.array([x0, y0])
     center += a
     logging.info(f"Center: {center}")
-    logging.info(f"Radius: {radius}")
+    logging.info(f"Radius: {radius}\n")
     return center, radius
 
 
@@ -227,8 +227,6 @@ def get_center(img):
         output = cv2.add(img, output)
         cv2.imshow('output', output)
         cv2.imshow('equal', gray)
-
-    if args.show:
         cv2.imshow('edges', edges)
 
     # Scan in each direction for closest edge
@@ -285,6 +283,8 @@ def process_image(img):
         save_file = os.path.join(save_folder, file_name, f'circle.{save_type}')
         if not cv2.imwrite(save_file, output):
             logging.error(f'Could not write to {save_file}')
+        else:
+            logging.debug(f'Wrote circle image to {save_file}')
 
     # Zoom into center
     # Get crop coordinates
@@ -314,6 +314,8 @@ def process_image(img):
         save_file = os.path.join(save_folder, file_name, f'zoom.{save_type}')
         if not cv2.imwrite(save_file, output):
             logging.error(f'Could not write to {save_file}')
+        else:
+            logging.debug(f'Wrote zoom image to {save_file}')
 
 
 image = cv2.imread(args.file)  # Read image
@@ -338,3 +340,4 @@ if args.show_plots:
     plt.show()
 if args.show:
     cv2.waitKey(0)
+    cv2.destroyAllWindows()

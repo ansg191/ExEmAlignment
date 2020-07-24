@@ -7,11 +7,11 @@ As a script:
     python concentricity.py [-h] [-c CONFIG] [-s] [--show-extra] [-v] [--show-ignored] [-p] FILE
 
     positional arguments:
-        FILE                        file to analyze
+        FILE                        File to analyze
 
     optional arguments:
-        -h, --help                  show help message
-        -c CONFIG, --config CONFIG  provide config file
+        -h, --help                  Show help message
+        -c CONFIG, --config CONFIG  Provide config file
         -s, --show                  Show main openCV windows
         --show-extra                Show debug openCV windows. This will also enable -s flag
         -v, --verbose               Show debug log. This will show some of the inner workings
@@ -94,7 +94,7 @@ if args.show_extra:
 if not args.show_ignored:
     warnings.filterwarnings("ignore", category=RuntimeWarning)  # Filter Runtime warnings
 
-np.set_printoptions(suppress=True)  # Prevent printing in scientific mode
+np.set_printoptions(suppress=True)  # Prevent printing in scientific notation
 
 if args.verbose:
     logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)

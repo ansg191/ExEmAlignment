@@ -159,8 +159,8 @@ top = blank[:size // 2, :]
 bot = blank[size // 2:, :]
 cv2.imshow('left', cv2.resize(left, (250, 500), interpolation=cv2.INTER_NEAREST))
 cv2.imshow('right', cv2.resize(right, (250, 500), interpolation=cv2.INTER_NEAREST))
-cv2.imshow('top', cv2.resize(top, (500, 250), interpolation=cv2.INTER_NEAREST))
 cv2.imshow('bottom', cv2.resize(bot, (500, 250), interpolation=cv2.INTER_NEAREST))
+cv2.imshow('top', cv2.resize(top, (500, 250), interpolation=cv2.INTER_NEAREST))
 
 left_edge = np.argmax(np.fliplr(left), axis=1)
 right_edge = np.argmax(right, axis=1)
@@ -188,6 +188,8 @@ bot_point = np.array([0, size // 2]) + fit_circle(bot_edge)
 print(left_point, right_point, top_point, bot_point)
 
 center, radius = get_circle(top_point, left_point, bot_point)
+radius += 1  # Add one because radius will always be smaller than actual radius by around 1
+
 print(center, radius)
 print("Center diff:", center - np.array(CENTER))
 print('Radius diff:', radius - RADIUS)
@@ -202,5 +204,5 @@ cv2.imshow('fit', cv2.resize(output, (500, 500), interpolation=cv2.INTER_NEAREST
 
 cv2.imshow('zoom', cv2.resize(blank, (500, 500), interpolation=cv2.INTER_NEAREST))
 
-# plt.show()
+plt.show()
 cv2.waitKey(0)

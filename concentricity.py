@@ -394,12 +394,12 @@ def process_image(img):
 
     # Draw plus sign at center
     cv2.line(output,
-             (scale * (icenter[0] - x_min), scale * (icenter[1] - y_min) + 15),
-             (scale * (icenter[0] - x_min), scale * (icenter[1] - y_min) - 15),
+             (scale * (icenter[0] - x_min), scale * (icenter[1] - y_min) + 30),
+             (scale * (icenter[0] - x_min), scale * (icenter[1] - y_min) - 30),
              (255, 128, 0), 1)
     cv2.line(output,
-             (scale * (icenter[0] - x_min) + 15, scale * (icenter[1] - y_min)),
-             (scale * (icenter[0] - x_min) - 15, scale * (icenter[1] - y_min)),
+             (scale * (icenter[0] - x_min) + 30, scale * (icenter[1] - y_min)),
+             (scale * (icenter[0] - x_min) - 30, scale * (icenter[1] - y_min)),
              (255, 128, 0), 1)
 
     if args.show:
